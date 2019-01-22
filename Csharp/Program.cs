@@ -2,11 +2,14 @@
 
 namespace Csharp
 {
-    class MainClass
+    class Program
     {
-        public static void Main(string[] args)
-        {
-            Console.WriteLine("Hello World!");
+        public static void Main(string[] args) {
+            string max;
+
+            max = "Have fun storming the castle!";
+
+            System.Console.WriteLine(max);
         }
     }
 }
