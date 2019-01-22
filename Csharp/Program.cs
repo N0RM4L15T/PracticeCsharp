@@ -5,11 +5,18 @@ namespace Csharp
     class Program
     {
         public static void Main(string[] args) {
-            string max;
+            string firstName;
+            string lastName;
 
-            max = "Have fun storming the castle!";
+            System.Console.WriteLine("Hey you!");
 
-            System.Console.WriteLine(max);
+            System.Console.Write("First Name : ");
+            firstName = System.Console.ReadLine();
+
+            System.Console.Write("Last Name : ");
+            lastName = System.Console.ReadLine();
+
+            System.Console.WriteLine($"Your full name is {firstName} {lastName}");
         }
     }
 }
