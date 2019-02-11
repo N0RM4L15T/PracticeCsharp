@@ -1,44 +1,67 @@
 ﻿using System;
 
-namespace Csharp
+namespace Park
 {
-    class Program
+    public class Matrix
     {
-        public static void Main(string[] args) {
-            int num1 = 10;
-            int num2 = 20;
-            string num3 = "10.1234567890123456789";
-            double num4 = 10.1234567890123;
-            string userInput;
-            int[] fib;
-            fib = new int[]{ 1, 1, 2, 3, 5, 8, 13, 21, 34, 55 };
+        private int[,] matrix;
 
-            System.Console.WriteLine($"Sum is {num1 + num2}");
-            System.Console.WriteLine($"It also can be said as 0x{(num1 + num2):X}");
+        protected int GetValue(int i,int j)
+        {
+            return matrix[i, j];
+        }
 
-            System.Console.WriteLine($"{double.Parse(num3)}");
-            System.Console.WriteLine(num3);
-            System.Console.WriteLine(num4 == double.Parse(num3));
+        protected void PutValue(int i, int j, int result)
+        {
+            matrix[i, j] = result;
+        }
 
-            for(int n = 0; n < 10; n++)
-            {
-                System.Console.Write($"{fib[n]} ");
-            }
-            System.Console.WriteLine();
-
-            System.Console.Write("Write freely : ");
-            userInput = System.Console.ReadLine();
-            System.Console.WriteLine($"Number of character : {userInput.Length}");
-            System.Console.WriteLine($"To uppercase : {userInput.ToUpper()}");
-
-            char[] reverse = userInput.ToCharArray();
-            System.Array.Reverse(reverse);
-
-            if (userInput == new string(reverse))
-            {
-                System.Console.WriteLine("This is palindrome.");
-            }
+        public Matrix() : this(1, 0, 0, 1)
+        {
 
         }
+
+        public Matrix(int a, int b, int c, int d)
+        {
+            matrix = new int[2, 2]{ { a, b }, { c, d } };
+        }
+
+        static public Matrix Multiply(Matrix a, Matrix b)
+        {
+            Matrix result = new Matrix();
+            result.PutValue(0, 0, a.GetValue(0, 0) * b.GetValue(0, 0) + a.GetValue(0, 1) * b.GetValue(1, 0));
+            result.PutValue(0, 1, a.GetValue(0, 0) * b.GetValue(0, 1) + a.GetValue(0, 1) * b.GetValue(1, 1));
+            result.PutValue(1, 0, a.GetValue(1, 0) * b.GetValue(0, 0) + a.GetValue(1, 1) * b.GetValue(1, 0));
+            result.PutValue(1, 1, a.GetValue(1, 0) * b.GetValue(0, 1) + a.GetValue(1, 1) * b.GetValue(1, 1));
+            return result;
+
+        }
+
+        public void ShowMatrix()
+        {
+            Console.WriteLine("{0} {1}", matrix[0, 0], matrix[0, 1]);
+            Console.WriteLine("{0} {1}", matrix[1, 0], matrix[1, 1]);
+        }
+    }
+
+    class MainApp
+    {
+        static void Main(String[] args)
+        {
+            Matrix matrixA = new Matrix(3, 2, 1, 4);
+            Matrix matrixB = new Matrix(9, 2, 1, 7);
+            Matrix E = new Matrix();
+
+            matrixA.ShowMatrix();
+            matrixB.ShowMatrix();
+            E.ShowMatrix();
+
+            Console.WriteLine();
+            Matrix.Multiply(E, matrixB).ShowMatrix();
+            Matrix.Multiply(matrixB, E).ShowMatrix();
+            Matrix.Multiply(matrixA, E).ShowMatrix();
+            Matrix.Multiply(matrixA, matrixB).ShowMatrix();
+        }
+
     }
 }
