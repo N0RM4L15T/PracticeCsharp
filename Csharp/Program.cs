@@ -2,66 +2,78 @@
 
 namespace Park
 {
-    public class Matrix
+    public static class Sort
     {
-        private int[,] matrix;
+        public delegate bool sortingDirection(int a, int b);
 
-        protected int GetValue(int i,int j)
+        public static bool IsBigger(int a, int b)
         {
-            return matrix[i, j];
+            if (a > b)
+                return true;
+            else
+                return false;
         }
 
-        protected void PutValue(int i, int j, int result)
+        public static bool IsSmaller(int a, int b)
         {
-            matrix[i, j] = result;
+            if (a < b)
+                return true;
+            else
+                return false;
         }
 
-        public Matrix() : this(1, 0, 0, 1)
+       
+
+        public static void BubbleSort(int[] target, sortingDirection sort)
         {
+            int temp;
 
+            for(int n1 = 0; n1 < target.Length ; n1 ++)
+            {
+                for (int n2 = 0; n2 < target.Length-1 ; n2 ++)
+                {
+
+                    if (sort(target[n1], target[n2]))
+                    {
+                        temp = target[n1];
+                        target[n1] = target[n2];
+                        target[n2] = temp;
+                    }
+                }
+            }
         }
-
-        public Matrix(int a, int b, int c, int d)
-        {
-            matrix = new int[2, 2]{ { a, b }, { c, d } };
-        }
-
-        static public Matrix Multiply(Matrix a, Matrix b)
-        {
-            Matrix result = new Matrix();
-            result.PutValue(0, 0, a.GetValue(0, 0) * b.GetValue(0, 0) + a.GetValue(0, 1) * b.GetValue(1, 0));
-            result.PutValue(0, 1, a.GetValue(0, 0) * b.GetValue(0, 1) + a.GetValue(0, 1) * b.GetValue(1, 1));
-            result.PutValue(1, 0, a.GetValue(1, 0) * b.GetValue(0, 0) + a.GetValue(1, 1) * b.GetValue(1, 0));
-            result.PutValue(1, 1, a.GetValue(1, 0) * b.GetValue(0, 1) + a.GetValue(1, 1) * b.GetValue(1, 1));
-            return result;
-
-        }
-
-        public void ShowMatrix()
-        {
-            Console.WriteLine("{0} {1}", matrix[0, 0], matrix[0, 1]);
-            Console.WriteLine("{0} {1}", matrix[1, 0], matrix[1, 1]);
-        }
+        
     }
 
-    class MainApp
+    public class MainApp
     {
-        static void Main(String[] args)
+        static void Main(string[] args)
         {
-            Matrix matrixA = new Matrix(3, 2, 1, 4);
-            Matrix matrixB = new Matrix(9, 2, 1, 7);
-            Matrix E = new Matrix();
+            int[] a = new int[10] { 2, 4, 6, 8, 10, 3, 7, 5, 1, 9 };
+            PrintArray(a);
 
-            matrixA.ShowMatrix();
-            matrixB.ShowMatrix();
-            E.ShowMatrix();
 
-            Console.WriteLine();
-            Matrix.Multiply(E, matrixB).ShowMatrix();
-            Matrix.Multiply(matrixB, E).ShowMatrix();
-            Matrix.Multiply(matrixA, E).ShowMatrix();
-            Matrix.Multiply(matrixA, matrixB).ShowMatrix();
+            Sort.BubbleSort(a, new Sort.sortingDirection(Sort.IsSmaller));
+            PrintArray(a);
+
+            Sort.BubbleSort(a, new Sort.sortingDirection(Sort.IsBigger));
+            PrintArray(a);
+
         }
 
+        static void HandlesortingDirection(int a, int b)
+        {
+        }
+
+
+        static void PrintArray(int[] array)
+        {
+            Console.Write("Elements : ");
+            foreach (int n in array)
+            {
+                Console.Write($"{n} ");
+            }
+            Console.WriteLine();
+        }
     }
 }
