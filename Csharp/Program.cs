@@ -1,12 +1,15 @@
 ﻿using System;
+using static Park.Sort<int>;
+using static Park.Sort<double>;
+using sortingDirection = Park.Sort<int>.sortingDirection;
 
 namespace Park
 {
-    public static class Sort
+    public static class Sort<T> where T : IComparable
     {
-        public delegate bool sortingDirection<T>(T a, T b) where T : IComparable;
+        public delegate bool sortingDirection(T a, T b);
 
-        public static bool Ascending<T>(T a, T b) where T : IComparable
+        public static bool Ascending(T a, T b)
         {
             if (a.CompareTo(b) < 0)
                 return true;
@@ -14,31 +17,35 @@ namespace Park
                 return false;
         }
 
-        public static bool Descending<T>(T a, T b) where T : IComparable
+        public static bool Descending(T a, T b)
         {
             if (a.CompareTo(b)>0)
                 return true;
             else
                 return false;
         }
-     
-        public static void BubbleSort<T>(T[] target, sortingDirection<T> sort) where T : IComparable
+
+        public static void Swap(ref T a,ref T b, sortingDirection compare)
         {
-            T temp;
+            if (compare(a, b))
+            {
+                T temp = a;
+                a = b;
+                b = temp;
+            }
+        }
+
+        public static void BubbleSort(T[] target, sortingDirection compare)
+        {
+            int len = target.Length;
 
             try
             {
-                for (int n1 = 0; n1 < target.Length; n1++)
+                for (int n1 = 0; n1 < len; n1++)
                 {
-                    for (int n2 = 0; n2 < target.Length - 1; n2++)
+                    for (int n2 = 0; n2 < len - 1; n2++)
                     {
-
-                        if (sort(target[n1], target[n2]))
-                        {
-                            temp = target[n1];
-                            target[n1] = target[n2];
-                            target[n2] = temp;
-                        }
+                        Swap(ref target[n1], ref target[n2], compare);
                     }
                 }
             }
@@ -48,34 +55,24 @@ namespace Park
             }
         }
 
-        public static void CocktailSort<T>(T[] target, sortingDirection <T> sort) where T : IComparable
+        public static void CocktailSort(T[] target, sortingDirection compare)
         {
-            T temp;
-            int half = target.Length / 2;
+            int len = target.Length;
+            int half = len / 2;
 
             try
             {
                 for (int n1 = 0; n1 < half; n1++)
                 {
                     int n2 = n1 + 1;
-                    while(n2 < target.Length - n1 - 1)
+                    while(n2 < (len - n1 - 1))
                     {
-                        if (sort(target[n1], target[n2]))
-                        {
-                            temp = target[n1];
-                            target[n1] = target[n2];
-                            target[n2] = temp;
-                        }
+                        Swap(ref target[n1], ref target[n2], compare);
                         n2++;
                     }
                     while (n2 > n1)
                     {
-                        if (sort(target[n2], target[n1]))
-                        {
-                            temp = target[n1];
-                            target[n1] = target[n2];
-                            target[n2] = temp;
-                        }
+                        Swap(ref target[n2], ref target[n1], compare);
                         n2--;
                     }
                 }
@@ -91,37 +88,38 @@ namespace Park
     {
         static void Main(string[] args)
         {
-            int[] a = new int[10] { 2, 4, 6, 8, 10, 3, 7, 5, 1, 9 };
-            double[] b = new double[15] { 1.3, 1.5, 3.14, 2, 1, 100.54, 4.9, 8.7, 2.5, 67.36, 1579.2468, 25.4, 32.11, 11.11, 42 };
+            int[] a = { 2, 4, 6, 8, 10, 3, 7, 5, 1, 9 };
+            double[] b = { 1.3, 1.5, 3.14, 2, 1, 100.54, 4.9, 8.7, 2.5, 67.36, 1579.2468, 25.4, 42, 11.11,};
 
             PrintArray(a);
             PrintArray(b);
 
-            Sort.CocktailSort(a, new Sort.sortingDirection<int>(Sort.Ascending));
+            BubbleSort(a, new sortingDirection(Ascending));
             PrintArray(a);
 
-            Sort.CocktailSort(a, new Sort.sortingDirection<int>(Sort.Descending));
-            PrintArray(a);
-                       
-            Sort.BubbleSort(a, new Sort.sortingDirection<int>(Sort.Ascending));
+            BubbleSort(a, new sortingDirection(Descending));
             PrintArray(a);
 
-            Sort.BubbleSort(a, new Sort.sortingDirection<int>(Sort.Descending));
+            CocktailSort(a, new sortingDirection(Ascending));
             PrintArray(a);
 
-            Sort.BubbleSort(b, new Sort.sortingDirection<double>(Sort.Ascending));
+            CocktailSort(a, new sortingDirection(Descending));
+            PrintArray(a);
+
+            CocktailSort(b, new Sort<double>.sortingDirection(Ascending));
             PrintArray(b);
 
-            Sort.BubbleSort(b, new Sort.sortingDirection<double>(Sort.Descending));
+            CocktailSort(b, new Sort<double>.sortingDirection(Descending));
             PrintArray(b);
         }
 
         static void PrintArray<T>(T[] array)
         {
+            int len = array.Length;
             Console.Write("Elements : ");
             try
             {
-                for (int n = 0; n < array.Length; n++)
+                for (int n = 0; n < len; n++)
                 {
                     Console.Write($"{array[n]} ");
                 }
