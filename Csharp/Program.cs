@@ -82,6 +82,8 @@ namespace Park
                 Console.WriteLine("Out of bounds in arrays");
             }
         }
+
+        public static void Sort(T[] target, sortingDirection compare)
     }
 
     public class MainApp
