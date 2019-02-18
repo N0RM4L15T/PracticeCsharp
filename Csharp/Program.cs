@@ -1,13 +1,11 @@
 ﻿using System;
-using static Park.Sort<int>;
-using static Park.Sort<double>;
-using sortingDirection = Park.Sort<int>.sortingDirection;
 
 namespace Park
 {
     public static class Sort<T> where T : IComparable
     {
         public delegate bool sortingDirection(T a, T b);
+        public delegate void sortType(T[] a, sortingDirection d);
 
         public static bool Ascending(T a, T b)
         {
@@ -19,13 +17,13 @@ namespace Park
 
         public static bool Descending(T a, T b)
         {
-            if (a.CompareTo(b)>0)
+            if (a.CompareTo(b) > 0)
                 return true;
             else
                 return false;
         }
 
-        public static void Swap(ref T a,ref T b, sortingDirection compare)
+        public static void Swap(ref T a, ref T b, sortingDirection compare)
         {
             if (compare(a, b))
             {
@@ -35,6 +33,13 @@ namespace Park
             }
         }
 
+        public static void Swap(ref T a, ref T b)
+        {
+            T temp = a;
+            a = b;
+            b = temp;
+        }
+
         public static void BubbleSort(T[] target, sortingDirection compare)
         {
             int len = target.Length;
@@ -42,12 +47,8 @@ namespace Park
             try
             {
                 for (int n1 = 0; n1 < len; n1++)
-                {
                     for (int n2 = 0; n2 < len - 1; n2++)
-                    {
                         Swap(ref target[n1], ref target[n2], compare);
-                    }
-                }
             }
             catch (IndexOutOfRangeException)
             {
@@ -65,7 +66,7 @@ namespace Park
                 for (int n1 = 0; n1 < half; n1++)
                 {
                     int n2 = n1 + 1;
-                    while(n2 < (len - n1 - 1))
+                    while (n2 < (len - n1 - 1))
                     {
                         Swap(ref target[n1], ref target[n2], compare);
                         n2++;
@@ -83,39 +84,48 @@ namespace Park
             }
         }
 
-        public static void Sort(T[] target, sortingDirection compare)
-    }
-
-    public class MainApp
-    {
-        static void Main(string[] args)
+        public static void SelectSort(T[] target, sortingDirection compare)
         {
-            int[] a = { 2, 4, 6, 8, 10, 3, 7, 5, 1, 9 };
-            double[] b = { 1.3, 1.5, 3.14, 2, 1, 100.54, 4.9, 8.7, 2.5, 67.36, 1579.2468, 25.4, 42, 11.11,};
-
-            PrintArray(a);
-            PrintArray(b);
-
-            BubbleSort(a, new sortingDirection(Ascending));
-            PrintArray(a);
-
-            BubbleSort(a, new sortingDirection(Descending));
-            PrintArray(a);
-
-            CocktailSort(a, new sortingDirection(Ascending));
-            PrintArray(a);
-
-            CocktailSort(a, new sortingDirection(Descending));
-            PrintArray(a);
-
-            CocktailSort(b, new Sort<double>.sortingDirection(Ascending));
-            PrintArray(b);
-
-            CocktailSort(b, new Sort<double>.sortingDirection(Descending));
-            PrintArray(b);
+            int len = target.Length;
+            int min = 0;
+            for (int n1 = 0; n1 < len; n1++)
+            {
+                min = n1;
+                for (int n2 = n1; n2 < len; n2++)
+                {
+                    if (compare(target[n2], target[min])) {
+                        min = n2;
+                    }
+                }
+                Swap(ref target[min], ref target[n1]);
+            }
         }
 
-        static void PrintArray<T>(T[] array)
+        public static void PrintSort(T[] a, string type) {
+            sortType t;
+
+            Console.WriteLine("{0}sort", type);
+            switch (type) {
+                case "Bubble":
+                    t = BubbleSort;
+                    break;
+                case "Cocktail":
+                    t = CocktailSort;
+                    break;
+                case "Select":
+                    t = SelectSort;
+                    break;
+                default:
+                    Console.WriteLine("Invalid type.");
+                    return;
+            }
+            t(a, new sortingDirection(Ascending));
+            PrintArray(a);
+            t(a, new sortingDirection(Descending));
+            PrintArray(a);
+        }
+
+        static void PrintArray(T[] array)
         {
             int len = array.Length;
             Console.Write("Elements : ");
@@ -131,6 +141,23 @@ namespace Park
                 Console.WriteLine("Out of bounds in arrays");
             }
             Console.WriteLine();
+
         }
+    }
+    public class MainApp
+    {
+        static void Main(string[] args)
+        {
+            int[] a = { 2, 4, 6, 8, 10, 3, 7, 5, 1, 9 };
+            double[] b = { 1.3, 1.5, 3.14, 2, 1, 100.54, 4.9, 8.7, 2.5, 67.36, 1579.2468, 25.4, 42, 11.11,};
+
+            Sort<int>.PrintSort(a, "Bubble");
+            Sort<int>.PrintSort(a, "Cocktail");
+            Sort<double>.PrintSort(b, "Select");
+
+            string name = "";
+            string[] splited = name.Split((char)',');
+        }
+
     }
 }
