@@ -7,21 +7,8 @@ namespace Park
         private delegate bool sortingDirection(T a, T b);
         private delegate void sortType(T[] a, sortingDirection d);
 
-        private static bool Ascending(T a, T b)
-        {
-            if (a.CompareTo(b) < 0)
-                return true;
-            else
-                return false;
-        }
-
-        private static bool Descending(T a, T b)
-        {
-            if (a.CompareTo(b) > 0)
-                return true;
-            else
-                return false;
-        }
+        private static bool Ascending(T a, T b) => a.CompareTo(b) < 0;
+        private static bool Descending(T a, T b) => a.CompareTo(b) > 0;
 
         private static void Swap(ref T a, ref T b, sortingDirection compare)
         {
@@ -88,16 +75,21 @@ namespace Park
         {
             int len = target.Length;
             int min = 0;
-            for (int n1 = 0; n1 < len; n1++)
+
+            try
             {
-                min = n1;
-                for (int n2 = n1; n2 < len; n2++)
+                for (int n1 = 0; n1 < len; n1++)
                 {
-                    if (compare(target[n2], target[min])) {
-                        min = n2;
-                    }
+                    min = n1;
+                    for (int n2 = n1; n2 < len; n2++)
+                        if (compare(target[n2], target[min]))
+                            min = n2;
+                    Swap(ref target[min], ref target[n1]);
                 }
-                Swap(ref target[min], ref target[n1]);
+            }
+            catch (IndexOutOfRangeException)
+            {
+                Console.WriteLine("Out of bounds in arrays");
             }
         }
 
